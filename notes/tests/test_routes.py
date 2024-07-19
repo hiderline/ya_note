@@ -113,7 +113,7 @@ class TestRoutes(TestCase):
         urls = (
             ('notes:detail', (self.note.slug,)),
             ('notes:edit', (self.note.slug,)),
-            ('notes:delete', (self.note.id,)),
+            ('notes:delete', (self.note.slug,)),
             ('notes:add', None),
             ('notes:success', None),
             ('notes:list', None),
