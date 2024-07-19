@@ -35,7 +35,7 @@ class TestRoutes(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
-    def test_pages_availability_for_anonymous_user(self):
+    def test_pages_availability_for_all_users(self):
         """
         Всем пользователям доступны:
         - страница регистрации пользователей,
@@ -83,21 +83,20 @@ class TestRoutes(TestCase):
         - страница редактирования заметки,
         - страница удаления заметки,
         """
-        users_statuses = (
-            (self.author, HTTPStatus.OK),
-            (self.reader, HTTPStatus.NOT_FOUND),
+        clients_statuses = (
+            (self.author_client, HTTPStatus.OK),
+            (self.reader_client, HTTPStatus.NOT_FOUND),
         )
         urls = (
             ('notes:detail', (self.note.slug,)),
             ('notes:edit', (self.note.slug,)),
             ('notes:delete', (self.note.slug,)),
         )
-        for user, status in users_statuses:
+        for user_client, status in clients_statuses:
             for name, args in urls:
-                with self.subTest(user=user, name=name):
+                with self.subTest(user=user_client, name=name):
                     url = reverse(name, args=args)
-                    self.client.force_login(user)
-                    response = self.client.get(url)
+                    response = user_client.get(url)
                     self.assertEqual(response.status_code, status)
 
     def test_redirect_for_anonymous_client(self):
