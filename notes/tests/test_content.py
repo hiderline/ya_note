@@ -5,15 +5,14 @@ from django.urls import reverse
 from notes.forms import NoteForm
 from notes.models import Note
 
-
 User = get_user_model()
-
-TITLE = 'Note title'
-TEXT = 'Some note text'
-SLUG = 'note-slug'
 
 
 class TestContent(TestCase):
+    TITLE = 'Note title'
+    TEXT = 'Some note text'
+    SLUG = 'note-slug'
+
     @classmethod
     def setUpTestData(cls):
         cls.author = User.objects.create(username='Author_user')
@@ -25,9 +24,9 @@ class TestContent(TestCase):
         cls.another_user_client.force_login(cls.another_user)
 
         cls.note = Note.objects.create(
-            title=TITLE,
-            text=TEXT,
-            slug=SLUG,
+            title=cls.TITLE,
+            text=cls.TEXT,
+            slug=cls.SLUG,
             author=cls.author,
         )
 
