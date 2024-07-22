@@ -30,13 +30,14 @@ class TestContent(TestCase):
             author=cls.author,
         )
 
+        cls.URL_NOTES_LIST = reverse('notes:list')
+
     def test_note_in_list_for_author_client(self):
         """
         Отдельная заметка передаётся на страницу со списком заметок
         в списке object_list, в словаре context.
         """
-        url = reverse('notes:list')
-        response = self.author_client.get(url)
+        response = self.author_client.get(self.URL_NOTES_LIST)
         object_list = response.context['object_list']
         self.assertIn(self.note, object_list)
 
@@ -45,8 +46,7 @@ class TestContent(TestCase):
         В список заметок одного пользователя не попадают заметки
         другого пользователя.
         """
-        url = reverse('notes:list')
-        response = self.another_user_client.get(url)
+        response = self.another_user_client.get(self.URL_NOTES_LIST)
         object_list = response.context['object_list']
         self.assertNotIn(self.note, object_list)
 
@@ -59,10 +59,9 @@ class TestContent(TestCase):
             (self.author_client, True),
             (self.another_user_client, False),
         )
-        url = reverse('notes:list')
         for user_client, status in clients_status:
             with self.subTest(user_client):
-                response = user_client.get(url)
+                response = user_client.get(self.URL_NOTES_LIST)
                 object_list = response.context['object_list']
                 self.assertEqual(self.note in object_list, status)
 
